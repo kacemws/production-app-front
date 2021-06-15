@@ -8,6 +8,7 @@ import {
 import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
 import Cookies from "js-cookie";
 import { refreshExpiredToken, setAuthToken } from "./api/axios";
+import ThemedSuspense from "./components/ThemedSuspense";
 
 const Layout = lazy(() => import("./containers/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -112,10 +113,14 @@ function App() {
   }
   return (
     <>
-      <Router>
-        <AccessibleNavigationAnnouncer />
-        <Switch>{routes}</Switch>
-      </Router>
+      {fetchingToken ? (
+        <ThemedSuspense />
+      ) : (
+        <Router>
+          <AccessibleNavigationAnnouncer />
+          <Switch>{routes}</Switch>
+        </Router>
+      )}
     </>
   );
 }
