@@ -7,67 +7,67 @@
  */
 const routes = [
   {
-    path: '/app/dashboard', // the url
-    icon: 'HomeIcon', // the component being exported from icons/index.js
-    name: 'Dashboard', // name that appear in Sidebar
+    path: "/", // the url
+    icon: "HomeIcon", // the component being exported from icons/index.js
+    name: "Accueil", // name that appear in Sidebar
   },
   {
-    path: '/app/forms',
-    icon: 'FormsIcon',
-    name: 'Forms',
-  },
-  {
-    path: '/app/cards',
-    icon: 'CardsIcon',
-    name: 'Cards',
-  },
-  {
-    path: '/app/charts',
-    icon: 'ChartsIcon',
-    name: 'Charts',
-  },
-  {
-    path: '/app/buttons',
-    icon: 'ButtonsIcon',
-    name: 'Buttons',
-  },
-  {
-    path: '/app/modals',
-    icon: 'ModalsIcon',
-    name: 'Modals',
-  },
-  {
-    path: '/app/tables',
-    icon: 'TablesIcon',
-    name: 'Tables',
-  },
-  {
-    icon: 'PagesIcon',
-    name: 'Pages',
+    icon: "FormsIcon",
+    name: "Commandes",
     routes: [
-      // submenu
       {
-        path: '/login',
-        name: 'Login',
+        path: "/orders/all",
+        name: "Tout les commandes",
       },
       {
-        path: '/create-account',
-        name: 'Create account',
-      },
-      {
-        path: '/forgot-password',
-        name: 'Forgot password',
-      },
-      {
-        path: '/app/404',
-        name: '404',
-      },
-      {
-        path: '/app/blank',
-        name: 'Blank',
+        path: "/sales/all",
+        name: "Toutes les ventes",
       },
     ],
   },
-]
+  {
+    icon: "CardsIcon",
+    name: "Produits",
+    routes: [
+      {
+        path: "/products/all",
+        name: "Tout les produits",
+      },
+      {
+        path: "/productions/all",
+        name: "Toutes les productions",
+      },
+    ],
+  },
+  {
+    icon: "SuppliesIcon",
+    name: "Matières première",
+    routes: [
+      {
+        path: "/raw-materials/all",
+        name: "Toutes les matières premières",
+      },
+      {
+        path: "/supply-requests/all",
+        name: "Toutes les demandes d'achats",
+      },
+      {
+        path: "/supplies/all",
+        name: "Tous les achats",
+      },
+    ],
+  },
+  {
+    path: "/app/buttons",
+    icon: "VendorsIcon",
+    name: "Fournisseurs",
+  },
 
-export default routes
+  {
+    path: "/app/modals",
+    icon: "ClientsIcon",
+    name: "Clients",
+  },
+];
+
+export default routes;
