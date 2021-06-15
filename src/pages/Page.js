@@ -9,9 +9,6 @@ import {
   TableRow,
   TableFooter,
   TableContainer,
-  Badge,
-  Avatar,
-  Button,
   Pagination,
 } from "@windmill/react-ui";
 
@@ -47,18 +44,18 @@ function PageMarkup({ title, bulkData, columns }) {
         <Table>
           <TableHeader>
             <tr>
-              {columns.map((column) => (
-                <TableCell>column</TableCell>
+              {columns.map((column, i) => (
+                <TableCell key={i}>{column.title}</TableCell>
               ))}
             </tr>
           </TableHeader>
           <TableBody>
             {data.map((row, i) => (
               <TableRow key={i}>
-                {columns.map((column) => {
+                {columns.map((column, i) => {
                   return (
-                    <TableCell>
-                      <span className="text-sm">$ {row[column]}</span>
+                    <TableCell key={i}>
+                      <span className="text-sm">{row[column.dataIndex]}</span>
                     </TableCell>
                   );
                 })}
