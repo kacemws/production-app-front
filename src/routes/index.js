@@ -1,15 +1,24 @@
-import { lazy } from 'react'
+import { lazy } from "react";
 
 // use lazy for better code splitting, a.k.a. load faster
-const Dashboard = lazy(() => import('../pages/Dashboard'))
-const Forms = lazy(() => import('../pages/Forms'))
-const Cards = lazy(() => import('../pages/Cards'))
-const Charts = lazy(() => import('../pages/Charts'))
-const Buttons = lazy(() => import('../pages/Buttons'))
-const Modals = lazy(() => import('../pages/Modals'))
-const Tables = lazy(() => import('../pages/Tables'))
-const Page404 = lazy(() => import('../pages/404'))
-const Blank = lazy(() => import('../pages/Blank'))
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Cards = lazy(() => import("../pages/Cards"));
+const Charts = lazy(() => import("../pages/Charts"));
+const Buttons = lazy(() => import("../pages/Buttons"));
+const Modals = lazy(() => import("../pages/Modals"));
+const Tables = lazy(() => import("../pages/Tables"));
+const Page404 = lazy(() => import("../pages/404"));
+const Blank = lazy(() => import("../pages/Blank"));
+const Forms = lazy(() => import("../pages/Forms"));
+const Orders = lazy(() => import("./Order"));
+const Customers = lazy(() => import("./Customers"));
+const Materials = lazy(() => import("./Materials"));
+const Productions = lazy(() => import("./Productions"));
+const Products = lazy(() => import("./Products"));
+const Sales = lazy(() => import("./Sales"));
+const Vendors = lazy(() => import("./Vendors"));
+const Supplies = lazy(() => import("./Supplies"));
+const SupplyRequests = lazy(() => import("./SupplyRequests"));
 
 /**
  * ⚠ These are internal routes!
@@ -23,41 +32,53 @@ const Blank = lazy(() => import('../pages/Blank'))
  */
 const routes = [
   {
-    path: '/dashboard', // the url
+    path: "/", // the url
     component: Dashboard, // view rendered
   },
   {
-    path: '/forms',
-    component: Forms,
+    path: "/orders",
+    component: Orders,
   },
   {
-    path: '/cards',
-    component: Cards,
+    path: "/sales",
+    component: Sales,
   },
   {
-    path: '/charts',
-    component: Charts,
+    path: "/products",
+    component: Products,
   },
   {
-    path: '/buttons',
-    component: Buttons,
+    path: "/productions",
+    component: Productions,
   },
   {
-    path: '/modals',
-    component: Modals,
+    path: "/raw-materials",
+    component: Materials,
   },
   {
-    path: '/tables',
-    component: Tables,
+    path: "/supply-requests",
+    component: SupplyRequests,
   },
   {
-    path: '/404',
+    path: "/supplies",
+    component: Supplies,
+  },
+  {
+    path: "/vendors/",
+    component: Vendors,
+  },
+  {
+    path: "/customers",
+    component: Customers,
+  },
+  {
+    path: "/404",
     component: Page404,
   },
   {
-    path: '/blank',
+    path: "/blank",
     component: Blank,
   },
-]
+];
 
-export default routes
+export default routes;

@@ -33,10 +33,19 @@ function Layout() {
           <Suspense fallback={<ThemedSuspense />}>
             <Switch>
               {routes.map((route, i) => {
+                if (route.path == "/") {
+                  return (
+                    <Route
+                      key={i}
+                      exact={true}
+                      path={`${route.path}`}
+                      render={(props) => <route.component {...props} />}
+                    />
+                  );
+                }
                 return route.component ? (
                   <Route
                     key={i}
-                    exact={true}
                     path={`${route.path}`}
                     render={(props) => <route.component {...props} />}
                   />
