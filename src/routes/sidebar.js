@@ -58,13 +58,13 @@ const routes = [
     ],
   },
   {
-    path: "/app/buttons",
+    path: "/vendors/all",
     icon: "VendorsIcon",
     name: "Fournisseurs",
   },
 
   {
-    path: "/app/modals",
+    path: "/customers/all",
     icon: "ClientsIcon",
     name: "Clients",
   },

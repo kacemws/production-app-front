@@ -95,20 +95,26 @@ function App() {
 
   if (token === "") {
     console.log("hey");
-    routes = <Route exact path="/" component={Login} />;
+    routes = (
+      <>
+        <Route exact path="/" component={Login} />
+        <Route path="*">
+          <Redirect to="/" />
+        </Route>
+      </>
+    );
   } else {
-    routes = <Route exact path="/" component={Layout} />;
+    routes = (
+      <>
+        <Route path="/" component={Layout} />
+      </>
+    );
   }
   return (
     <>
       <Router>
         <AccessibleNavigationAnnouncer />
-        <Switch>
-          {routes}
-          <Route path="*">
-            <Redirect to="/" />
-          </Route>
-        </Switch>
+        <Switch>{routes}</Switch>
       </Router>
     </>
   );
