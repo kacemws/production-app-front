@@ -35,21 +35,23 @@ function List() {
     setInnerLoading(false);
   };
 
-  // const handleConfirm = async () => {
-  //   if (innerLoading) return;
-  //   setInnerLoading(true);
-  //   try {
-  //     await updateSale(selected["_id"], {
-
-  //       status: switchToggled ? "open" : "close",
-  //     });
-  //     const auxOrders = await getOrders();
-  //     setOrders([...auxOrders]);
-  //     closeModal();
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const handleConfirm = async () => {
+    if (innerLoading) return;
+    setInnerLoading(true);
+    try {
+      console.log(selected);
+      await updateSale(selected["_id"], {
+        confirmed: switchToggled,
+      });
+      const auxOrders = await getSales();
+      setSales([...auxOrders]);
+      closeModal();
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message);
+      setInnerLoading(false);
+    }
+  };
 
   return loading ? (
     <ThemedSuspense />
@@ -76,13 +78,22 @@ function List() {
           },
           {
             title: "Statut",
-            dataIndex: "status",
+            dataIndex: "confirmed",
+          },
+          {
+            title: "Date de vente",
+            dataIndex: "createdAt",
           },
         ]}
         bulkData={sales.map((order) => {
           return {
             ...order,
-            status: order.confirmed ? (
+            createdAt: new Intl.DateTimeFormat("fr-FR", {
+              year: "numeric",
+              month: "long",
+              day: "2-digit",
+            }).format(Date.parse(order["createdAt"])),
+            confirmed: order.confirmed ? (
               <Badge type="success">Confirmé</Badge>
             ) : (
               <Badge type="danger">Non Confirmé</Badge>
@@ -92,21 +103,21 @@ function List() {
         rowClick={(sale) => {
           setModalOpen(true);
           setSelected(sale);
-          setSwitchToggled(sale?.status?.props?.type == "success");
+          setSwitchToggled(sale?.confirmed?.props?.type == "success");
         }}
       />
-      {/* <Modal isOpen={modalOpen} onClose={closeModal}>
-        <ModalHeader>Modifier le statut d'une commande</ModalHeader>
+      <Modal isOpen={modalOpen} onClose={closeModal}>
+        <ModalHeader>Modifier le statut de la vente</ModalHeader>
         <ModalBody>
           <div className="w-full h-12 my-2 flex justify-center items-center">
-            <span className="text-sm mx-2">Fermée</span>
+            <span className="text-sm mx-2">Non Confirmée</span>
             <SwitchToggle
               switchOn={switchToggled}
               onToggle={(_) => {
                 setSwitchToggled(!switchToggled);
               }}
             />
-            <span className="text-sm mx-2">Ouvert</span>
+            <span className="text-sm mx-2">Confirmée</span>
           </div>
         </ModalBody>
         <ModalFooter>
@@ -147,7 +158,6 @@ function List() {
           </div>
         </ModalFooter>
       </Modal>
-     */}
     </>
   );
 }
