@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PageMarkup from "../Page";
 import ThemedSuspense from "../../components/ThemedSuspense";
+import { Badge } from "@windmill/react-ui";
 import {
-  Badge,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Label,
-  Input,
-  Button,
-  HelperText,
-} from "@windmill/react-ui";
-import { getProducts, addProduct } from "../../api/products.instance";
-import SwitchToggle from "../../components/SwitchToggle";
+  getProducts,
+  addProduct,
+  updateProduct,
+  deleteProduct,
+} from "../../api/products.instance";
+import AddProductModal from "./AddProductModal";
+import UpdateProductModal from "./UpdateProductModal";
 
 function List() {
   const [products, setProducts] = useState([]);
@@ -30,6 +26,8 @@ function List() {
     disponibility: false,
   });
 
+  const [selected, setSelected] = useState(null);
+
   useEffect(() => {
     getProducts().then((resp) => {
       setProducts(resp);
@@ -38,6 +36,7 @@ function List() {
   }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
 
   const closeModal = () => {
     if (innerLoading) return;
@@ -49,6 +48,13 @@ function List() {
       disponibility: "",
     });
     setModalOpen(false);
+    setInnerLoading(false);
+  };
+
+  const closeUpdate = () => {
+    if (innerLoading) return;
+    setSelected(null);
+    setUpdateOpen(false);
     setInnerLoading(false);
   };
 
@@ -75,6 +81,52 @@ function List() {
       const auxProducts = await getProducts();
       setProducts([...auxProducts]);
       closeModal();
+    } catch (err) {
+      console.error(err);
+      let message = err?.response?.data?.message;
+      alert(message);
+      setInnerLoading(false);
+    }
+  };
+
+  const handleUpdate = async () => {
+    if (innerLoading) return;
+    if (Object.values(selected).includes("")) {
+      alert("Veuillez remplire le formulaire ! ");
+      return;
+    }
+    if (selected.price < 1) {
+      alert("Veuillez saisir une valeur valide");
+      return;
+    }
+    setInnerLoading(true);
+    try {
+      await updateProduct(selected["_id"], {
+        code: selected.code,
+        designation: selected.designation,
+        price: selected.price,
+        mesureUnit: selected.mesureUnit,
+        disponibility: selected.disponibility,
+      });
+      const auxProducts = await getProducts();
+      setProducts([...auxProducts]);
+      closeUpdate();
+    } catch (err) {
+      console.error(err);
+      let message = err?.response?.data?.message;
+      alert(message);
+      setInnerLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (innerLoading) return;
+    setInnerLoading(true);
+    try {
+      await deleteProduct(selected["_id"]);
+      const auxProducts = await getProducts();
+      setProducts([...auxProducts]);
+      closeUpdate();
     } catch (err) {
       console.error(err);
       let message = err?.response?.data?.message;
@@ -127,125 +179,32 @@ function List() {
             ),
           };
         })}
-        rowClick={(_) => {
-          console.log("nevermind");
+        rowClick={(product) => {
+          console.log({ ...product });
+          setSelected({
+            ...product,
+            disponibility: product?.disponibility?.props?.type != "danger",
+          });
+          setUpdateOpen(true);
         }}
       />
-      <Modal isOpen={modalOpen} onClose={closeModal}>
-        <ModalHeader>Ajouter un produit</ModalHeader>
-        <ModalBody>
-          <Label>
-            <span>Code Produit</span>
-            <Input
-              className="mt-1"
-              placeholder="xxxxxxxxxxxx"
-              onChange={(event) => {
-                setData({
-                  ...data,
-                  code: event.target.value,
-                });
-              }}
-            />
-          </Label>
-          <Label className="mt-4">
-            <span>Désignation</span>
-            <Input
-              className="mt-1"
-              placeholder="Cable cuivre"
-              onChange={(event) => {
-                setData({
-                  ...data,
-                  designation: event.target.value,
-                });
-              }}
-            />
-          </Label>
-          <Label className="mt-4">
-            <span>Price</span>
-            <Input
-              className="mt-1"
-              type="number"
-              placeholder="0"
-              value={data.price}
-              onChange={(event) => {
-                if (event.target.value < 0) {
-                  alert("Veuillez saisir une valeur valide");
-                  return;
-                }
-                setData({
-                  ...data,
-                  price: event.target.value,
-                });
-              }}
-            />
-          </Label>
-          <Label className="mt-4">
-            <span>Unité de mesure</span>
-            <Input
-              className="mt-1"
-              placeholder="KG"
-              onChange={(event) => {
-                setData({
-                  ...data,
-                  mesureUnit: event.target.value,
-                });
-              }}
-            />
-          </Label>
-
-          <Label className="mt-4">
-            <span>Disponibilité</span>
-            <div className="mt-1">
-              <SwitchToggle
-                switchOn={data.disponibility}
-                onToggle={(_) => {
-                  setData({
-                    ...data,
-                    disponibility: !data.disponibility,
-                  });
-                }}
-              />
-            </div>
-          </Label>
-        </ModalBody>
-        <ModalFooter>
-          <div className="hidden sm:block">
-            <Button
-              disabled={innerLoading}
-              layout="outline"
-              onClick={closeModal}
-            >
-              Annuler
-            </Button>
-          </div>
-          <div className="hidden sm:block">
-            <Button disabled={innerLoading} onClick={handleConfirm}>
-              Confirmer
-            </Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button
-              disabled={innerLoading}
-              block
-              size="large"
-              layout="outline"
-              onClick={closeModal}
-            >
-              Annuler
-            </Button>
-          </div>
-          <div className="block w-full sm:hidden">
-            <Button
-              disabled={innerLoading}
-              onClick={handleConfirm}
-              block
-              size="large"
-            >
-              Confirmer
-            </Button>
-          </div>
-        </ModalFooter>
-      </Modal>
+      <AddProductModal
+        modalOpen={modalOpen}
+        closeModal={closeModal}
+        handleConfirm={handleConfirm}
+        data={data}
+        setData={setData}
+        innerLoading={innerLoading}
+      />
+      <UpdateProductModal
+        modalOpen={updateOpen}
+        closeModal={closeUpdate}
+        handleConfirm={handleUpdate}
+        handleDelete={handleDelete}
+        data={selected}
+        setData={setSelected}
+        innerLoading={innerLoading}
+      />
     </>
   );
 }
