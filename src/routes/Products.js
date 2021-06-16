@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 // import OrderDetails from "./Orders/OrderDetails";
-import Products from "../pages/Orders/List";
+import Products from "../pages/Products/List";
 
 export default function ProductNavigation() {
   let routes = (
