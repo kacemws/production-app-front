@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import PageMarkup from "../Page";
 import ThemedSuspense from "../../components/ThemedSuspense";
-import { Badge } from "@windmill/react-ui";
+import { Badge, Button } from "@windmill/react-ui";
 import {
   getProducts,
   addProduct,
   updateProduct,
   deleteProduct,
 } from "../../api/products.instance";
+import { addProduction } from "../../api/productions.instance";
 import AddProductModal from "./AddProductModal";
 import UpdateProductModal from "./UpdateProductModal";
+import ProductionModal from "./StartProductionModal";
 
 function List() {
   const [products, setProducts] = useState([]);
@@ -37,6 +39,7 @@ function List() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
+  const [productionOpen, setProductionOpen] = useState(false);
 
   const closeModal = () => {
     if (innerLoading) return;
@@ -55,6 +58,13 @@ function List() {
     if (innerLoading) return;
     setSelected(null);
     setUpdateOpen(false);
+    setInnerLoading(false);
+  };
+
+  const closeProduction = () => {
+    if (innerLoading) return;
+    setSelected(null);
+    setProductionOpen(false);
     setInnerLoading(false);
   };
 
@@ -119,6 +129,26 @@ function List() {
     }
   };
 
+  const handleProduction = async (data) => {
+    if (innerLoading) return;
+    setInnerLoading(true);
+    try {
+      await addProduction({
+        product: selected?.designation,
+        quantity: data?.quantity,
+        duration: data?.duration,
+      });
+      const auxProducts = await getProducts();
+      setProducts([...auxProducts]);
+      closeProduction();
+    } catch (err) {
+      console.error(err);
+      let message = err?.response?.data?.message;
+      alert(message);
+      setInnerLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (innerLoading) return;
     setInnerLoading(true);
@@ -168,6 +198,10 @@ function List() {
             title: "Disponibilité",
             dataIndex: "disponibility",
           },
+          {
+            title: "Actions",
+            dataIndex: "actions",
+          },
         ]}
         bulkData={products.map((product) => {
           return {
@@ -176,6 +210,20 @@ function List() {
               <Badge type="success">Disponible</Badge>
             ) : (
               <Badge type="danger">Indisponible</Badge>
+            ),
+            actions: (
+              <button
+                disabled={innerLoading}
+                className="text-purple-600 background-transparent font-bold uppercase px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelected(product);
+                  setProductionOpen(true);
+                }}
+              >
+                Lancer Production
+              </button>
             ),
           };
         })}
@@ -203,6 +251,13 @@ function List() {
         handleDelete={handleDelete}
         data={selected}
         setData={setSelected}
+        innerLoading={innerLoading}
+      />
+      <ProductionModal
+        modalOpen={productionOpen}
+        closeModal={closeProduction}
+        handleConfirm={handleProduction}
+        data={selected}
         innerLoading={innerLoading}
       />
     </>
