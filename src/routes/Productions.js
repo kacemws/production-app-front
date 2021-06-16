@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 // import OrderDetails from "./Orders/OrderDetails";
-import Productions from "../pages/Orders/List";
+import Productions from "../pages/Productions/List";
 
 export default function ProductionNavigation() {
   let routes = (
