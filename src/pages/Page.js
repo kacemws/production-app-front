@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import PageTitle from "../components/Typography/PageTitle";
 import {
+  Button,
   Table,
   TableHeader,
   TableCell,
@@ -12,7 +13,7 @@ import {
   Pagination,
 } from "@windmill/react-ui";
 
-function PageMarkup({ title, bulkData, columns, rowClick }) {
+function PageMarkup({ title, cta, bulkData, columns, rowClick }) {
   // setup pages control for every table
   const [index, setIndex] = useState(1);
   const [data, setData] = useState([]);
@@ -38,7 +39,19 @@ function PageMarkup({ title, bulkData, columns, rowClick }) {
 
   return (
     <>
-      <PageTitle>{title}</PageTitle>
+      <PageTitle>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>{title}</span>
+          {cta && <Button onClick={cta.onClick}>{cta.title}</Button>}
+        </div>
+      </PageTitle>
 
       <TableContainer className="mb-8">
         <Table>
