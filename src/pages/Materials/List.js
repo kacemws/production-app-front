@@ -10,6 +10,8 @@ import {
 } from "../../api/materials.instance";
 import AddProductModal from "./AddProductModal";
 import UpdateProductModal from "./UpdateProductModal";
+import RequestModal from "./CreateRequest";
+import { addRequest } from "../../api/supplyRequests.instance";
 
 function List() {
   const [materials, setMaterials] = useState([]);
@@ -35,6 +37,7 @@ function List() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
 
   const closeModal = () => {
     if (innerLoading) return;
@@ -51,6 +54,13 @@ function List() {
     if (innerLoading) return;
     setSelected(null);
     setUpdateOpen(false);
+    setInnerLoading(false);
+  };
+
+  const closeRequest = () => {
+    if (innerLoading) return;
+    setSelected(null);
+    setRequestOpen(false);
     setInnerLoading(false);
   };
 
@@ -111,6 +121,27 @@ function List() {
     }
   };
 
+  const handleRequest = async (data) => {
+    if (innerLoading) return;
+    setInnerLoading(true);
+    try {
+      await addRequest({
+        rawMaterial: selected?.designation,
+        quantity: data?.quantity,
+        price: data?.price,
+        vendor: data?.vendor,
+      });
+      const auxMaterials = await getMaterials();
+      setMaterials([...auxMaterials]);
+      closeRequest();
+    } catch (err) {
+      console.error(err);
+      let message = err?.response?.data?.message;
+      alert(message);
+      setInnerLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (innerLoading) return;
     setInnerLoading(true);
@@ -152,6 +183,10 @@ function List() {
             title: "Disponibilité",
             dataIndex: "disponibility",
           },
+          {
+            title: "Actions",
+            dataIndex: "actions",
+          },
         ]}
         bulkData={materials.map((material) => {
           return {
@@ -160,6 +195,20 @@ function List() {
               <Badge type="success">Disponible</Badge>
             ) : (
               <Badge type="danger">Indisponible</Badge>
+            ),
+            actions: (
+              <button
+                disabled={innerLoading}
+                className="text-purple-600 background-transparent font-bold uppercase px-3 py-1 text-xs outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setSelected(material);
+                  setRequestOpen(true);
+                }}
+              >
+                Faire une demande d'achat
+              </button>
             ),
           };
         })}
@@ -187,6 +236,13 @@ function List() {
         handleDelete={handleDelete}
         data={selected}
         setData={setSelected}
+        innerLoading={innerLoading}
+      />
+      <RequestModal
+        modalOpen={requestOpen}
+        closeModal={closeRequest}
+        handleConfirm={handleRequest}
+        data={selected}
         innerLoading={innerLoading}
       />
     </>
