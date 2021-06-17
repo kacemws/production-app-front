@@ -17,7 +17,7 @@ const routes = [
     routes: [
       {
         path: "/orders/all",
-        name: "Tout les commandes",
+        name: "Toutes les commandes",
       },
       {
         path: "/sales/all",
@@ -31,7 +31,7 @@ const routes = [
     routes: [
       {
         path: "/products/all",
-        name: "Tout les produits",
+        name: "Tous les produits",
       },
       {
         path: "/productions/all",

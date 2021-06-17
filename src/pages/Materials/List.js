@@ -163,7 +163,7 @@ function List() {
   ) : (
     <>
       <PageMarkup
-        title="Tout les materiaux"
+        title="Tous les materiaux"
         cta={{
           title: "Ajouter une matière première",
           onClick: (_) => {

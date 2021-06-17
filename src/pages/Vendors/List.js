@@ -86,7 +86,7 @@ function List() {
   ) : (
     <>
       <PageMarkup
-        title="Tout les fournisseurs"
+        title="Tous les fournisseurs"
         cta={{
           title: "Ajouter fournisseur",
           onClick: (_) => {

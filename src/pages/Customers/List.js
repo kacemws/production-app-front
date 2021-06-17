@@ -19,7 +19,7 @@ function List() {
   ) : (
     <>
       <PageMarkup
-        title="Tout les clients"
+        title="Tous les clients"
         columns={[
           {
             title: "Nom",
