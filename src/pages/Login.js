@@ -12,6 +12,7 @@ function Login() {
   const history = useHistory();
   const [error, setError] = useState("");
   const [data, setData] = useState({});
+  const [loading, setLoading] = useState(false);
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
@@ -75,8 +76,10 @@ function Login() {
                 className="mt-4"
                 block
                 tag={Link}
+                disabled={loading}
                 onClick={async (_) => {
                   try {
+                    setLoading(true);
                     const answ = await login(data);
                     var in15minutes = new Date(new Date().getTime() + 900000);
                     Cookies.set("accessToken", answ.data.accessToken, {
@@ -86,9 +89,11 @@ function Login() {
                       "refreshToken",
                       answ.data.refreshToken
                     );
+                    setLoading(false);
                   } catch (err) {
                     if (err?.response?.status == 400) {
                       setError(true);
+                      setLoading(false);
                     }
                   }
                 }}
