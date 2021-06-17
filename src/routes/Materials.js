@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 // import OrderDetails from "./Orders/OrderDetails";
-import Materials from "../pages/Orders/List";
+import Materials from "../pages/Materials/List";
 
 export default function MaterialNavigation() {
   let routes = (
