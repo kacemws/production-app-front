@@ -16,6 +16,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@headlessui/react": "^1.2.0",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.5.0",
     "@testing-library/user-event": "7.2.1",
@@ -36,12 +37,14 @@
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "1.1.4",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "@svgr/webpack": "5.4.0",
     "autoprefixer": "9.8.0",
     "commitizen": "4.1.2",
     "cross-env": "7.0.2",
     "cssnano": "4.1.10",
-    "cz-conventional-changelog": "3.2.0",
+    "cz-conventional-changelog": "^3.2.0",
     "postcss-cli": "7.1.1",
     "react-axe": "3.5.2",
     "release-it": "13.6.4",
@@ -71,6 +74,29 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    "@semantic-release/github",
+    "@semantic-release/npm",
+    "@semantic-release/git"
+  ],
+  "release": {
+    "prepare": [
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      {
+        "path": "@semantic-release/git",
+        "assets": [
+          "package.json",
+          "package-lock.json",
+          "CHANGELOG.md"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
     ]
   }
 }
